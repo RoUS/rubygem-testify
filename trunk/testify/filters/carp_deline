@@ -1,0 +1,19 @@
+use strict;
+#
+# Neutralise the line numbers in carp() messages
+# Note that the \S+ pattern won't work on paths that contain
+# spaces (as they might, particularly on Windows).  However, a
+# other patterns might match too much.  TODO..
+#
+while (<>) {
+    s§(at \S+ line) \d+$§$1 XXX§;
+    print $_;
+}
+
+#
+# Local Variables:
+# mode: cperl
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:
+#
