@@ -1,0 +1,53 @@
+Commands/concepts:
+
+Whatever constitutes a test run gets stored as input and output.  Either
+a non-interactive script can provide it, or a 'record' operation can
+be used as a sort of combination of script(1) and emacs' kbd-macro.
+After a run has been created and the first output produced, it needs
+to be approved as the benchmark against future runs will be compared.
+This approval is done with the 'accept' command.
+
+Once a run has been accepted (need to come up with a better name than
+'run' or 'test'), it's ready to be used.  After each additional run,
+the output will be compared to the benchmark; a 'no differences' result
+means that the run will be marked as 'passed' and the output will be
+discarded.  If the output differs from the benchmark, the run will be
+marked as 'failed', the differences reported and available, and the
+output kept temporarily.  It can either be made the/a new benchmark
+with the 'accept' command, or thrown away with 'reject' or 'discard'.
+
+An expected sequence of actions might be:
+
+Setup:
+1. Prepare a script that does all the necessary bits.
+2. Create a Testify run for it
+3. Execute the run.
+4. Examine the output.
+5. Update any filters, then go to #3.
+6. Accept the output, freezing the run.
+
+Use:
+1. Make the changes to be tested to whatever's involved.
+2. Execute the Testify run again.
+3. If it passes, no regressions were introduced (at least not that are
+   noticed by the testing system).
+4. If it fails, revealing unwanted regressions, go to #1.
+5. If it fails but shows the correct new results (such as for a change
+   in the script or a feature addition), accept the output as the new
+   benchmark.
+
+Commands:
+o 'accept'
+o 'add' (for new run, filter, ...)
+o 'delete'
+o 'edit'
+o 'freeze' -- maybe not necessary?  'accept' do this?
+o 'record'
+o 'reject'/'discard'
+o 'run'
+
+Issues:
+o having to discard current output before running again
+o CMS for benchmarks, run package versions, etc.
+o when a run is accepted, all parts need to be sucked into the CMS
+o 

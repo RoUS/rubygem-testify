@@ -2,7 +2,7 @@ use strict;
 #
 # Neutralise the line numbers in carp() messages
 # Note that the \S+ pattern won't work on paths that contain
-# spaces (as they might, particularly on Windows).  However, a
+# spaces (as they might, particularly on Windows).  However,
 # other patterns might match too much.  TODO..
 #
 while (<>) {
