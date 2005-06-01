@@ -1,0 +1,27 @@
+#
+# $Id: MANIFEST,v 1.1 2005/06/01 23:36:45 coar Exp $
+#
+# Package name: testify
+# Package version: 0.1
+# Package files:
+#   MANIFEST
+#   INSTALL
+#   README
+#   LICENCE
+#   ChangeLog
+#   TODO
+#   acinclude.m4
+#   configure
+#   configure.in
+#   Makefile.in
+#   install-sh
+#   testify.in
+#   testify.1
+#
+# Abstract:
+#+
+# A script for answering mail.  Put it in your .forward or .qmail
+# file, and it will reply to all incoming messages with the
+# response you specify, optionally including the original message
+# as an attachment.
+#-

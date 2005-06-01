@@ -2,7 +2,7 @@ use strict;
 #
 # Neutralise date/time expressions.
 #
-while (<>) {
+#while (<>) {
     #
     # First get rid of the times
     #
@@ -15,8 +15,8 @@ while (<>) {
     s§ XXX\s\d{4}\b                              §XXX XXXX§gx;
     s§ \b\d{4}-\d{2}-\d{2}\b                     §XXXX-XX-XX§gx;
     s§ \b[[:alpha:]]{3}\s[[:alpha:]]{3}\s\d{2}\b §XXX XXX XX§gx;
-    print $_;
-}
+#    print $_;
+#}
 
 #
 # Local Variables:

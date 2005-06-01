@@ -1,0 +1,46 @@
+MANIFEST=@PACKAGE_FILES@
+
+#
+# Shouldn't need to change anything below this line.
+#
+PACKAGE=autoresponder
+VERSION=@PACKAGE_VERSION@
+PACKAGEDIR=autoresponder
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+sbindir=@sbindir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+man1dir=@mandir@/man1
+mansubdir=@mansubdir@
+sysconfdir=@sysconfdir@
+piddir=@piddir@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+INSTALL=@INSTALL@
+
+DESTDIR=
+VPATH=@srcdir@
+TARBALL=$(PACKAGE)-$(VERSION).tar
+DISTFILE=$(TARBALL).gz
+
+install : autoresponder autoresponder.1
+	@ echo "Installing applications..."
+	@ $(INSTALL) -m 0755 autoresponder @bindir@/autoresponder
+	@ echo "Installing documentation..."
+	@ $(INSTALL) -m 0755 autoresponder.1 $(man1dir)/autoresponder.1
+	@ echo "autoresponder $(VERSION) installed."
+
+dist : $(DISTFILE)
+
+PACKAGELOC=$(PACKAGEDIR)-$(VERSION)
+FILES=`echo $(MANIFEST) | sed -e 's: : $(PACKAGELOC)/:g;s:^:$(PACKAGELOC)/:;'`
+
+$(DISTFILE) : $(TARBALL)
+	gzip $<
+
+$(TARBALL) : $(MANIFEST)
+	ln -s ./ $(PACKAGELOC) \
+		&& tar cvf $(PACKAGELOC)/$@ $(FILES) ; \
+		rm -f $(PACKAGELOC)

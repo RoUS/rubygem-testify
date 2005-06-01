@@ -1,0 +1,125 @@
+#! @PERL@ -w
+#
+# Testify v@PACKAGE_VERSION@
+#
+# ====================================================================
+# Copyright 2005 Ken Coar
+# All rights reserved.
+#
+# The use and distribution of this code or document is
+# governed by version 2.0 of the Apache licence, which may
+# be found online at
+#  <URL:http://www.apache.org/licenses/LICENSE-2.0>.
+# There should also be a copy accompanying this package, in
+# a file named LICENCE.
+#
+# $Id: testify.in,v 1.1 2005/06/01 23:36:45 coar Exp $
+#
+
+use strict;
+use Config;
+use Symbol;
+use Getopt::Long;
+use Carp;
+use Text::Abbrev;
+use Data::Dumper;
+use IPC::Open2;
+use IO::Handle;
+use IO::Tty;
+use Expect;
+use POSIX qw( :sys_wait_h );
+use Filter;
+
+my $VERSION = '@PACKAGE_VERSION@';
+
+my $signal;
+my @signames = split(/\s+/, $Config{sig_name});
+my @signums = split(/\s+/, $Config{sig_num});
+for (my $index = 0; $index < @signames; $index++) {
+    $signal->{$signames[$index]} = $signums[$index];
+    $signal->{$signums[$index]} = $signames[$index];
+}
+
+Getopt::Long::Configure qw( bundling require_order pass_through );
+
+my $o_help;
+my %options;
+
+#
+# Global options
+#
+GetOptions(\%options,
+           'help'             => \$o_help,
+          );
+
+my $verbs = abbrev qw(add
+                      compare
+                      create
+                      delete
+                      modify
+                      remove
+                      run
+                      show
+                      update
+                     );
+my $nouns = abbrev qw(benchmark
+                      filter
+                      test
+                     );
+my $arg_run = abbrev qw(filter
+                        test
+                       );
+my $subs = {'add'    => \$nouns,
+            'create' => \$nouns,
+            'delete' => \$nouns,
+            'remove' => \$nouns,
+            'run'    => \$arg_run,
+           };
+
+croak('Nothing to do') if (! @ARGV);
+
+my $verb = shift;
+my $noun;
+my $command;
+croak("Unrecognised verb '$verb'")
+    if (! defined($verbs->{lc($verb)}));
+$verb = $verbs->{lc($verb)};
+$command = $verb;
+
+if (defined($subs->{$verb})) {
+    $noun = shift;
+    croak("Invalid syntax for command '$command'")
+        if (! $noun);
+    croak("Unrecognised command '$verb $noun'")
+        if (! defined($nouns->{lc($noun)}));
+    $noun = $nouns->{lc($noun)};
+    $command .= " $noun";
+}
+for (@ARGV) {
+    $command .= " $_";
+}
+print "command: $command\n";
+
+my $fh = gensym();
+my $filter_input = gensym();
+my $filter_output = gensym();
+
+if ($command =~ /^run filter/) {
+    my $filter_name = $ARGV[0];
+    croak('No filter specified') if (! $filter_name);
+    my $filter = new Filter(Name => $filter_name, ReadLines => 'all');
+    print Dumper($filter);
+    $filter->export(\*STDOUT);
+    my $output = $filter->run() || 'undef';
+    print "<<$output>>\n";
+    print '>>' . $filter->run('input!') . "<<\n";
+}
+
+#
+# Local Variables:
+# mode: cperl
+# tab-width: 4
+# indent-tabs-mode: nil
+# c-basic-offset: 4
+# End:
+#

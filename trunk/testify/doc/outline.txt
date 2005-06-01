@@ -48,6 +48,7 @@ o 'run'
 
 Issues:
 o having to discard current output before running again
-o CMS for benchmarks, run package versions, etc.
+o CMS for benchmarks, run package versions, etc.  (e.g., CVS, SVN, ...)
+  Needs a plugin-style interface, á la DBI/DBD
 o when a run is accepted, all parts need to be sucked into the CMS
-o 
+o Metadata in separate back-endable database (like MySQL)?

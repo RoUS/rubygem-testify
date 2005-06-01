@@ -1,0 +1,22 @@
+For a new test:
+
+1. Create a test, define prologue, filters, epilogue
+2. Run test
+3. Verify that output is as desired (lather, rinse, repeat)
+4. Commit output as benchmark.
+
+Running an existing test (i.e., validating new code levels):
+
+1. Run prologue
+2. Run test
+3. Run epilogue
+4. Run filters
+5. Compare to the benchmark\
+6. Report success or else show differences
+
+o Changed output needs to be committable as the new benchmark.
+o Old benchmarks need to be retained and addressable in order to
+  be able to test updates to older branches.
+
+o Multiple tests need to be assemblable into a group or suite, and run
+  as a unit.
