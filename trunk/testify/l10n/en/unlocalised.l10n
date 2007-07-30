@@ -1,0 +1,5 @@
+#
+# Localised help text for 'there is no help for you here.'
+#
+&_unlocalised
+There is no localisation of '%s' for locale '%s'

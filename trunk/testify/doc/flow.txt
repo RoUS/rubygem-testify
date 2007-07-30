@@ -11,12 +11,13 @@ Running an existing test (i.e., validating new code levels):
 2. Run test
 3. Run epilogue
 4. Run filters
-5. Compare to the benchmark\
+5. Compare to the benchmark
 6. Report success or else show differences
 
 o Changed output needs to be committable as the new benchmark.
 o Old benchmarks need to be retained and addressable in order to
   be able to test updates to older branches.
+  -- Here's where CVS or SVN comes in
 
-o Multiple tests need to be assemblable into a group or suite, and run
-  as a unit.
+o Multiple tests need to be assemblable into a group/suite/collection,
+  and run as a unit.

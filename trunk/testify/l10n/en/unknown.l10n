@@ -1,0 +1,7 @@
+#
+# Localised help text for 'what you say?'
+#
+&_unknown_command
+Unknown command '%s'.
+&_unknown_item
+Unknown item type '%s'.

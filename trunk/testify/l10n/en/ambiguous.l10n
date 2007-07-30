@@ -1,0 +1,5 @@
+#
+# Localised error text for 'not sure which command you mean.'
+#
+&_ambiguous
+Ambiguous command '%s'.

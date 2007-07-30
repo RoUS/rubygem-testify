@@ -1,0 +1,5 @@
+#
+# Localised error text for 'your command syntax id b0rked'
+#
+&_badsyntax
+Invalid syntax for command '%s'

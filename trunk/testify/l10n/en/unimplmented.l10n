@@ -1,0 +1,5 @@
+#
+# Localised help text for 'that command is unimplemented.'
+#
+&_unimplemented_command
+Unimplemented command '%s'.

@@ -1,0 +1,108 @@
+#! @PERL@ -w
+#
+# Create a text/message localisation database from the specified files.
+# Topics/keys are identified by a leading '&'.  (Used primarily for help
+# text.)
+#
+use strict;
+use Fcntl;
+use Getopt::Long;
+use SDBM_File;
+
+my %options;
+my $dbfile = 'localisation.ldb';
+my $case = 0;
+my %ldb;
+my $key;
+my $text = '';
+my $verbosity = 0;
+
+Getopt::Long::Configure( qw( bundling ));
+GetOptions(\%options,
+           'downcase|d' => sub { $case = -1; },
+           'o=s'  => \$dbfile,
+           'upcase|u'   => sub { $case = 1; },
+           'v+'   => \$verbosity,
+          );
+
+tie(%ldb, 'SDBM_File', $dbfile, O_RDWR|O_CREAT, 0755)
+    or die("Can't tie/create db file '$dbfile': $!");
+
+my $filename = $ARGV[0];
+#exit(0) if ((! @ARGV) || (! -r $filename));
+
+while (my $line = <>) {
+    if ($verbosity && ($. < 2)) {
+        print "Reading text from '$filename'\n";
+    }
+    next if ($line =~ m§^\s*#§);
+    #
+    # Check for a new key being introduced.  If so, either close out
+    # the last one or discard anything accumulated so far if we don't
+    # have one under construction.
+    #
+    if ($line !~ m§^([-&])(.*)§) {
+        $text .= $line;
+        next;
+    }
+    #
+    # All right, we're starting a new segment of some sort.  Save
+    # anything we've collected and start the new one.
+    #
+    if (! $key) {
+        #
+        # We haven't found a key yet, so throw it all away.
+        #
+        $text = '';
+        $key = $2;
+        next;
+    }
+    #
+    # Here's where we'd differentiate on the leading character, if we
+    # were going to.
+    #
+    if ($1 eq '&') {
+        #
+        # New main key.
+        #
+        store_key($key, $text);
+        $text = '';
+        chomp($key = $2);
+        next;
+    }
+    else {
+        $text .= $line;
+    }
+}
+continue {
+    if (eof(ARGV)) {
+        $filename = $ARGV[0];
+        close(ARGV);
+    }
+};
+
+if ($key && $text) {
+    store_key($key, $text);
+}
+
+untie(%ldb);
+exit(0);
+
+sub store_key {
+    my ($key, $text) = @_;
+    print "Storing text for '$key'\n" if ($verbosity > 1);
+    if ($case) {
+        $key = ($case < 0) ? lc($key) : uc($key);
+    }
+    $ldb{$key} = $text;
+    return;
+}
+
+#
+# Local Variables:
+# mode: cperl
+# tab-width: 4
+# indent-tabs-mode: nil
+# c-basic-offset: 4
+# End:
+#

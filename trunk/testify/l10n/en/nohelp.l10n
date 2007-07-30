@@ -1,0 +1,5 @@
+#
+# Localised help text for 'there is no help for you here.'
+#
+&_nohelp
+There is no help available for topic '%s'.

@@ -1,0 +1,6 @@
+#
+# Localised help text for 'there is no help file for that language.'
+#
+&_nolocal
+There is no localised help for language '%s'.
+

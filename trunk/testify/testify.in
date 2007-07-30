@@ -13,22 +13,27 @@
 # There should also be a copy accompanying this package, in
 # a file named LICENCE.
 #
-# $Id: testify.in,v 1.1 2005/06/01 23:36:45 coar Exp $
+# $Id: testify.in,v 1.2 2007/07/30 02:17:09 coar Exp $
 #
 
 use strict;
-use Config;
-use Symbol;
-use Getopt::Long;
 use Carp;
-use Text::Abbrev;
+use Config;
 use Data::Dumper;
-use IPC::Open2;
+use Expect;
+use Getopt::Long;
 use IO::Handle;
 use IO::Tty;
-use Expect;
+use IPC::Open2;
 use POSIX qw( :sys_wait_h );
+use Symbol;
+use Term::ReadLine;
+
+use lib 'pmods/';
+use Command;
 use Filter;
+use L10n;
+use TCfg;
 
 my $VERSION = '@PACKAGE_VERSION@';
 
@@ -52,68 +57,60 @@ GetOptions(\%options,
            'help'             => \$o_help,
           );
 
-my $verbs = abbrev qw(add
-                      compare
-                      create
-                      delete
-                      modify
-                      remove
-                      run
-                      show
-                      update
-                     );
-my $nouns = abbrev qw(benchmark
-                      filter
-                      test
-                     );
-my $arg_run = abbrev qw(filter
-                        test
-                       );
-my $subs = {'add'    => \$nouns,
-            'create' => \$nouns,
-            'delete' => \$nouns,
-            'remove' => \$nouns,
-            'run'    => \$arg_run,
-           };
 
-croak('Nothing to do') if (! @ARGV);
+my $term = new Term::ReadLine('Testify');
+my $localiser = new L10n;
+my $cfg = new TCfg('testify.cfg');
+my $dispatcher = new Command(localiser => $localiser, config => $cfg);
 
-my $verb = shift;
-my $noun;
+my $finished = 0;
 my $command;
-croak("Unrecognised verb '$verb'")
-    if (! defined($verbs->{lc($verb)}));
-$verb = $verbs->{lc($verb)};
-$command = $verb;
+my $estatus = 0;
+my $cmdline;
+my $one_command;
 
-if (defined($subs->{$verb})) {
-    $noun = shift;
-    croak("Invalid syntax for command '$command'")
-        if (! $noun);
-    croak("Unrecognised command '$verb $noun'")
-        if (! defined($nouns->{lc($noun)}));
-    $noun = $nouns->{lc($noun)};
-    $command .= " $noun";
+if ($one_command = @ARGV) {
+    $cmdline = $dispatcher->assemble_safely(@ARGV);
 }
-for (@ARGV) {
-    $command .= " $_";
-}
-print "command: $command\n";
 
-my $fh = gensym();
-my $filter_input = gensym();
-my $filter_output = gensym();
+while (! $finished) {
+    if (! $one_command) {
+        $cmdline = $term->readline('testify> ');
+    }
+    else {
+        $finished = 1;
+    }
+    if (! defined($cmdline)) {
+        print "\n" if (! $one_command);
+        last;
+    }
 
-if ($command =~ /^run filter/) {
-    my $filter_name = $ARGV[0];
-    croak('No filter specified') if (! $filter_name);
-    my $filter = new Filter(Name => $filter_name, ReadLines => 'all');
-    print Dumper($filter);
-    $filter->export(\*STDOUT);
-    my $output = $filter->run() || 'undef';
-    print "<<$output>>\n";
-    print '>>' . $filter->run('input!') . "<<\n";
+    $term->addhistory($cmdline);
+
+    $dispatcher->parse($cmdline);
+    $command = $dispatcher->verb();
+    if ($command =~ /^(?:(?:good)?bye|exit|quit)$/) {
+        $finished = 1;
+        last;
+    }
+
+    my $fh = gensym();
+    my $filter_input = gensym();
+    my $filter_output = gensym();
+
+    if ($command =~ /^run filter/) {
+        my $filter_name = $ARGV[0];
+        croak($localiser->lookup('_nofilterspec')) if (! $filter_name);
+        my $filter = new Filter(Name => $filter_name, ReadLines => 'all');
+        print Dumper($filter);
+        $filter->export(\*STDOUT);
+        my $output = $filter->run() || 'undef';
+        print "<<$output>>\n";
+        print '>>' . $filter->run('input!') . "<<\n";
+    }
 }
+
+exit($dispatcher->{status});
 
 #
 # Local Variables:

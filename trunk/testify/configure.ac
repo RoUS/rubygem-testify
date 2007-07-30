@@ -9,7 +9,7 @@
 # There should also be a copy accompanying this package, in
 # a file named LICENCE.
 #
-# $Id: configure.ac,v 1.1 2005/06/01 23:36:45 coar Exp $
+# $Id: configure.ac,v 1.2 2007/07/30 02:17:09 coar Exp $
 #
 
 AC_INIT(testify,0.1)
@@ -108,18 +108,17 @@ AC_SUBST(CMS)
 # Check for necessary Perl modules.
 #
 MP_REQUIRED_MODULES="Carp Data::Dumper Expect Fcntl Getopt::Long"
-MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES IO::Handle IO::Stty IPC::Open2"
-MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES MIME::Base64 POSIX Symbol"
-MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES Text::Abbrev"
-#if test "$ENABLE_HISTORY" = "yes" ; then
-#    MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES SDBM_File Mail::Address"
-#fi
+MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES IO::Handle IO::Stty IO::Tty"
+MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES IPC::Open2 MIME::Base64 MIME::Parser"
+MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES POSIX SDBM_File Symbol"
+MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES Term::ReadLine Text::Abbrev"
+MP_REQUIRED_MODULES="$MP_REQUIRED_MODULES Text::ParseWords Text::Quote"
 MP_PERL_MODULE(${MP_REQUIRED_MODULES})
 if test "x${mp_missing_pm}" != "x" ; then
         AC_MSG_WARN(Missing required Perl module(s): ${mp_missing_pm})
 fi
 
-AC_OUTPUT(testify Makefile)
+AC_OUTPUT(testify Makefile l10n/mkl10n.pl)
 
 #
 # All done, say what we did.
@@ -157,4 +156,5 @@ AC_OUTPUT(testify Makefile)
 ##        echo "package will run."
 ##        echo ""
 ##fi
+chmod 755 testify l10n/mkl10n.pl
 echo "Now run 'make install'."

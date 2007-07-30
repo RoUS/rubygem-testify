@@ -1,0 +1,35 @@
+This tree contains the libraries of localised text, and the source
+files used to create them.
+
+Libraries are named {lang}.ldb, such as "en.ldb", and the source files
+for a particular language are found in the directory with the same
+name.  For example, the source files for English (considered the
+master sources on which the other localised files should be based) are
+in the "en/" subdirectory.
+
+Source files are suffixed with ".l10n" and customarily contain one
+item per file.  However, the mkl10n.pl script doesn't really care;
+multiple localisations can exist in a particular file, or they could
+all be in one big file.
+
+The content of a .l10n file is treated as follows:
+
+* Lines with a first non-whitespace character of '#' are treated as
+  comments and ignored;
+* Lines beginning with '&' in column 1 are the keys for which
+  localised text is being provided.  These keys are what are looked up
+  with the L10n Perl module.
+* All other lines are considered the localisation text for the most
+  recently read key.
+
+That last point bears thinking about; since the mkl10n.pl script
+doesn't care about file boundaries, it is possible for text in one
+file to be considered part of the localisation for a key in a file
+previously read.  For this reason it is STRONGLY recommended that the
+first non-comment line of all .l10n files be a '&key' definition line.
+
+The libraries are built by the mkl10n.pl script.  The Makefile will
+apply it to all languages found in the tree.
+
+% make clean
+% make all

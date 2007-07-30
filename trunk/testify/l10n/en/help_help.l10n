@@ -1,0 +1,10 @@
+#
+# Start each topic with its name preceded by '&help_' in column one.
+#
+&help_help
+By itself, the 'help' command simply tells you for what topics
+help is available.  Each topic can be viewed by including it on
+the command line, such as 'help add'.
+
+If the topic string is ambiguous, all potentially matching
+topics are displayed.

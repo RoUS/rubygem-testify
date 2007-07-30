@@ -1,0 +1,14 @@
+#
+# Help text for the 'add' command.
+#
+# Start each topic with its name preceded by '&help_' in column one.
+#
+&help_add
+Adds an item to the database.  Tests, filters, and
+benchmarks may be added.
+-Benchmark
+Mark this, buddy!
+-Filter
+Adds a wossname, filter.
+-Test
+Adds a test.
