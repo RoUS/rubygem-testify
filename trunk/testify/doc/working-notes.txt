@@ -1,0 +1,18 @@
+Filter attributes:
+
+ o Is it a Perl script or something else?  (Only Perl at first)
+ o Does it read every line itself (while <>) or does it act on one line
+   at a time (perl -p)?
+ o What's its name?
+ o What's its filename?
+ o Where is it located?
+ o What termination sentinel string should it be sent, if any?
+
+Other notes:
+
+ o Configuration needs to be abstracted so the storage can be
+   a text file or db of some sort.
+ o The config stuff could possibly benefit from the PHP stuff
+   I did for Damia.
+ o The command parser needs to be more generalised, and made able
+   to handle things like 'add test -f -g -h foo'.
