@@ -3,5 +3,4 @@ config.log
 config.nice
 config.status
 configure
-testify
 autom4te.cache
