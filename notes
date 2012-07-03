@@ -1,0 +1,25 @@
+Command format:
+
+testify [GLOBAL-OPTIONS] [verb [LOCAL-OPTIONS] [noun] [arguments]]
+
+GLOBAL-OPTIONS:
+  -C configfile (D=./.testify/config merged on top of ~/.testify/config)
+
+verb:
+  add/create
+  compare
+  config (patterned after git's)
+  exit
+  help
+  list
+  modify
+  quit
+  remove/delete
+  run
+  show
+  update
+
+noun:
+  benchmark
+  filter
+  test

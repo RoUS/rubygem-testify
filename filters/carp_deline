@@ -1,6 +1,7 @@
+#! /usr/bin/env perl
 use strict;
 #
-# Neutralise the line numbers in carp() messages
+# Neutralise the line numbers in Perl carp() messages
 # Note that the \S+ pattern won't work on paths that contain
 # spaces (as they might, particularly on Windows).  However,
 # other patterns might match too much.  TODO..
