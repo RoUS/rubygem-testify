@@ -4,6 +4,7 @@ testify [GLOBAL-OPTIONS] [verb [LOCAL-OPTIONS] [noun] [arguments]]
 
 GLOBAL-OPTIONS:
   -C configfile (D=./.testify/config merged on top of ~/.testify/config)
+  -d workdir (D=.)
 
 verb:
   add/create
@@ -11,6 +12,7 @@ verb:
   config (patterned after git's)
   exit
   help
+  init
   list
   modify
   quit
